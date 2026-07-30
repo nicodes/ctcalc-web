@@ -1,12 +1,306 @@
 ---
-import { Counter } from '../components/Counter';
-import Title from '../components/Title.astro';
-import Layout from '../layouts/Layout.astro';
+import Full from '../layouts/Full.astro';
+import octicons from '@primer/octicons';
+
+const appUrl = 'https://app.ctcalc.com';
+const repo = 'https://github.com/nicodes/ctcalc';
+const icon = (name: keyof typeof octicons, size = 16) =>
+	octicons[name].toSVG({ width: size, height: size });
+
+// The reading shown in the frame is a real one. Free chlorine against giardia
+// at 5 °C, 1.0 mg/L, pH 7.0, for 2-log inactivation is 99 mg·min/L in the
+// manual's table, and the regression published alongside it gives 107 for the
+// same conditions. Both are what the app returns, formatted the way the app
+// formats them — see README.
+const example = {
+	temperature: '5',
+	residual: '1.0',
+	ph: '7.0',
+	logs: '2',
+	table: '99.0',
+	formula: '107',
+};
+
+const coverage = [
+	{ disinfectant: 'Free chlorine', from: '0.5 °C', chemistry: 'Temperature, residual and pH' },
+	{ disinfectant: 'Chloramine', from: '1 °C', chemistry: 'Temperature' },
+	{ disinfectant: 'Chlorine dioxide', from: '1 °C', chemistry: 'Temperature' },
+	{ disinfectant: 'Ozone', from: '1 °C', chemistry: 'Temperature' },
+];
 ---
 
-<Layout>
-	<main class="flex flex-col items-center gap-12 px-6 py-16">
-		<Title />
-		<Counter client:visible />
-	</main>
-</Layout>
+<Full>
+	<div class="page-shell">
+		<header class="site-header">
+			<a class="brand" href="/" aria-label="CT Calc home">
+				<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+					<path d="M16 3c0 0 10 11.2 10 17a10 10 0 0 1-20 0c0-5.8 10-17 10-17Z"></path>
+					<path d="M16 15v5h4"></path>
+				</svg>
+				<span>CT Calc</span>
+			</a>
+			<a class="header-cta" href={appUrl}>Open app <span class="icon" set:html={icon('arrow-up-right', 14)} /></a>
+		</header>
+
+		<main>
+			<section class="hero">
+				<div class="hero-copy">
+					<p class="eyebrow"><span></span> Surface Water Treatment Rule</p>
+					<h1>Contact time, <em>without the tables.</em></h1>
+					<p class="lede">
+						How much CT you need to inactivate giardia and viruses — read from the EPA's published
+						tables, interpolated properly, and worked out on your device so it answers with no
+						signal at all.
+					</p>
+					<div class="hero-actions">
+						<a class="primary-cta" href={appUrl}>Open CT Calc <span class="icon" set:html={icon('arrow-right', 16)} /></a>
+						<p>Web, iOS and Android · works offline · free</p>
+					</div>
+				</div>
+
+				<div class="product-frame" aria-label="CT Calc, calculating free chlorine against giardia">
+					<div class="frame-bar">
+						<div class="frame-brand"><span class="menu-lines"></span> CT Calc</div>
+						<div class="frame-actions"><span class="icon" set:html={icon('info', 13)} /></div>
+					</div>
+
+					<div class="app-pane">
+						<p class="app-intro">
+							Contact time needed to inactivate giardia and viruses, from the tables in EPA
+							815-R-99-013.
+						</p>
+
+						<p class="field-label">Disinfectant</p>
+						<div class="pills">
+							<span class="pill on">Free chlorine</span><span class="pill">Chlorine dioxide</span
+							><span class="pill">Chloramine</span><span class="pill">Ozone</span>
+						</div>
+
+						<p class="field-label">Pathogen</p>
+						<div class="pills"><span class="pill on">Giardia</span><span class="pill">Viruses</span></div>
+
+						<div class="inputs">
+							<div class="input">
+								<span class="input-label">Temperature (°C)<i>0 – 25</i></span>
+								<b>{example.temperature}</b>
+							</div>
+							<div class="input">
+								<span class="input-label">Residual (mg/L)<i>≤ 3</i></span>
+								<b>{example.residual}</b>
+							</div>
+							<div class="input">
+								<span class="input-label">pH<i>6 – 9</i></span>
+								<b>{example.ph}</b>
+							</div>
+						</div>
+
+						<p class="field-label">Logs of inactivation</p>
+						<div class="pills">
+							<span class="pill">0.5</span><span class="pill">1</span><span class="pill">1.5</span
+							><span class="pill on">{example.logs}</span><span class="pill">2.5</span><span class="pill">3</span>
+						</div>
+
+						<div class="result">
+							<small>Contact time required</small>
+							<p class="reading">{example.table} <i>mg·min/L</i></p>
+							<small class="muted">Interpolated from the EPA tables.</small>
+							<small class="muted">
+								The manual's regression gives <b>{example.formula} mg·min/L</b> for the same conditions.
+							</small>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="principles" aria-label="How CT Calc works">
+				<article>
+					<span class="number">01</span>
+					<div>
+						<h2>The published tables, read properly</h2>
+						<p>
+							Every answer comes from EPA 815-R-99-013. Those tables are sampled on a coarse grid,
+							so readings between grid points are interpolated — across temperature alone for most
+							disinfectants, and across temperature, residual and pH together for free chlorine
+							against giardia.
+						</p>
+					</div>
+				</article>
+				<article>
+					<span class="number">02</span>
+					<div>
+						<h2>It stops where the manual stops</h2>
+						<p>
+							Conditions outside the published range are refused rather than extrapolated. Past the
+							edge of the tables there is no measurement to extend, and a confident number there
+							would be an invented one.
+						</p>
+					</div>
+				</article>
+				<article>
+					<span class="number">03</span>
+					<div>
+						<h2>No signal required</h2>
+						<p>
+							The tables are bundled into the app and the arithmetic runs on your device. There is
+							no account, no server and nothing to wait for — which matters in a plant room, where
+							the answer is needed and the bars are not.
+						</p>
+					</div>
+				</article>
+			</section>
+
+			<section class="coverage">
+				<div class="coverage-copy">
+					<h2>What it covers</h2>
+					<p>
+						Giardia from 0.5-log to 3-log inactivation in half-log steps, and viruses at 2-log,
+						3-log and 4-log — to 25&nbsp;°C, for every disinfectant the manual tabulates.
+						Cryptosporidium is not covered.
+					</p>
+				</div>
+				<table>
+					<thead>
+						<tr><th scope="col">Disinfectant</th><th scope="col">From</th><th scope="col">Varies over</th></tr>
+					</thead>
+					<tbody>
+						{
+							coverage.map((row) => (
+								<tr>
+									<th scope="row">{row.disinfectant}</th>
+									<td>{row.from}</td>
+									<td>{row.chemistry}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</section>
+
+			<section class="closing">
+				<p>Know the number.<br />Not the page it is on.</p>
+				<div><span>DISINFECTANT</span><i></i><span>CONDITIONS</span><i></i><span>CT REQUIRED</span></div>
+				<a class="primary-cta light" href={appUrl}>Open CT Calc <span class="icon" set:html={icon('arrow-right', 16)} /></a>
+			</section>
+		</main>
+
+		<footer>
+			<a class="brand footer-brand" href="/"><span>CT Calc</span></a>
+			<p><a href={repo}>Open source</a> · EPA 815-R-99-013</p>
+			<p>© {new Date().getFullYear()} CT Calc</p>
+		</footer>
+	</div>
+</Full>
+
+<style>
+	.page-shell { min-height: 100svh; overflow: hidden; }
+	.site-header { width: min(1180px, calc(100% - 40px)); height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+	.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-size: 19px; font-weight: 760; letter-spacing: -.03em; text-decoration: none; }
+	.brand-mark { width: 26px; height: 26px; }
+	.brand-mark path:first-child { fill: var(--ink); stroke: none; }
+	.brand-mark path:last-child { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+	.header-cta { color: var(--ink); border-bottom: 1px solid #c3cdd6; padding: 6px 0; font-size: 13px; font-weight: 650; text-decoration: none; }
+	.header-cta span { margin-left: 5px; color: var(--blue-deep); }
+	:global(.icon svg) { display: block; fill: currentColor; }
+
+	.hero { width: min(1180px, calc(100% - 40px)); margin: 70px auto 110px; display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 70px; }
+	.hero-copy { position: relative; z-index: 2; }
+	.eyebrow { display: flex; align-items: center; gap: 9px; margin: 0 0 22px; color: var(--quiet); font: 620 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+	.eyebrow span { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 4px rgba(32, 138, 239, .14); }
+	h1 { max-width: 600px; margin: 0; color: var(--ink); font-size: clamp(46px, 6vw, 78px); font-weight: 590; line-height: .99; letter-spacing: -.06em; }
+	h1 em { color: var(--blue-deep); font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
+	.lede { max-width: 520px; margin: 30px 0 32px; color: var(--quiet); font-size: 16px; line-height: 1.7; }
+	.hero-actions { display: flex; align-items: center; gap: 20px; }
+	.hero-actions p { margin: 0; color: #79848e; font: 500 10px/1.4 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+	.primary-cta { display: inline-flex; align-items: center; gap: 30px; border-radius: 4px; background: var(--ink); color: white; padding: 14px 18px; font-size: 13px; font-weight: 680; text-decoration: none; transition: transform .18s ease, background .18s ease; }
+	.primary-cta:hover { transform: translateY(-2px); background: #1d2b38; }
+	.primary-cta span { color: #8fc6f8; font-size: 17px; }
+
+	.product-frame { position: relative; border: 1px solid #d3dce4; border-radius: 9px; background: white; box-shadow: 0 35px 80px rgba(16, 26, 36, .13), 0 3px 10px rgba(16, 26, 36, .06); overflow: hidden; transform: perspective(1400px) rotateY(-3deg) rotateX(1deg); }
+	.product-frame::before { content: ''; position: absolute; z-index: -1; width: 340px; height: 340px; right: -70px; top: -90px; border-radius: 50%; background: var(--blue); filter: blur(80px); opacity: .26; }
+	.frame-bar { height: 42px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e7ecf1; padding: 0 13px; color: #515e69; font: 600 10px var(--mono); }
+	.frame-brand, .frame-actions { display: flex; align-items: center; gap: 11px; }
+	.menu-lines { width: 13px; height: 8px; border-block: 1px solid #747f89; position: relative; }
+	.menu-lines::after { content: ''; position: absolute; left: 0; right: 0; top: 3px; border-top: 1px solid #747f89; }
+	.frame-actions span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 4px; background: #eef2f6; color: #414c56; }
+
+	.app-pane { padding: 22px; background: #fbfcfd; }
+	.app-intro { margin: 0 0 20px; color: var(--quiet); font-size: 12px; line-height: 1.6; }
+	.field-label { margin: 0 0 8px; color: var(--quiet); font-size: 11px; font-weight: 700; }
+	.pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+	.pill { border: 1px solid transparent; border-radius: 14px; background: #eef2f6; padding: 6px 12px; font-size: 12px; color: #3d4954; }
+	.pill.on { border-color: var(--ink); background: #dfe6ed; font-weight: 700; color: var(--ink); }
+	.inputs { display: flex; gap: 10px; margin-bottom: 18px; }
+	.input { flex: 1; }
+	.input-label { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-bottom: 6px; color: var(--quiet); font-size: 11px; font-weight: 700; }
+	.input-label i { color: #8b959e; font-size: 10px; font-style: normal; font-weight: 500; }
+	.input b { display: block; border: 1px solid #dde4ea; border-radius: 8px; background: #eef2f6; padding: 9px 11px; font-size: 14px; font-weight: 500; }
+	.result { margin-top: 20px; border-radius: 10px; background: #eef2f6; padding: 20px; }
+	.result small { display: block; color: var(--quiet); font-size: 11px; font-weight: 700; }
+	.result .muted { margin-top: 6px; font-weight: 400; line-height: 1.5; }
+	.result .muted b { color: var(--ink); font-weight: 700; }
+	.reading { margin: 8px 0 10px; color: var(--ink); font-size: 38px; font-weight: 600; line-height: 1; letter-spacing: -.04em; }
+	.reading i { color: var(--quiet); font-size: 17px; font-style: normal; font-weight: 500; letter-spacing: -.02em; }
+
+	.principles { width: min(1180px, calc(100% - 40px)); margin: 0 auto 110px; border-top: 1px solid #d5dde5; }
+	.principles article { display: grid; grid-template-columns: 90px 1fr; border-bottom: 1px solid #d5dde5; padding: 32px 0; }
+	.principles article div { display: grid; grid-template-columns: .75fr 1fr; align-items: baseline; gap: 40px; }
+	.number { color: var(--blue-deep); font: 650 10px var(--mono); }
+	.principles h2 { margin: 0; color: var(--ink); font-size: 22px; font-weight: 580; letter-spacing: -.035em; }
+	.principles p { max-width: 550px; margin: 0; color: var(--quiet); font-size: 14px; line-height: 1.65; }
+
+	.coverage { width: min(1180px, calc(100% - 40px)); margin: 0 auto 110px; display: grid; grid-template-columns: .75fr 1fr; align-items: start; gap: 60px; }
+	.coverage h2 { margin: 0 0 16px; color: var(--ink); font-size: 30px; font-weight: 580; letter-spacing: -.045em; }
+	.coverage-copy p { margin: 0; max-width: 420px; color: var(--quiet); font-size: 14px; line-height: 1.7; }
+	.coverage table { width: 100%; border-collapse: collapse; }
+	.coverage th, .coverage td { text-align: left; border-bottom: 1px solid #d5dde5; padding: 14px 12px 14px 0; font-size: 13px; font-weight: 500; }
+	.coverage thead th { color: var(--quiet); font: 650 9px var(--mono); letter-spacing: .09em; text-transform: uppercase; padding-bottom: 10px; }
+	.coverage tbody th { color: var(--ink); font-weight: 650; }
+	.coverage tbody td { color: var(--quiet); }
+
+	.closing { width: min(1180px, calc(100% - 40px)); margin: 0 auto; border-radius: 8px; background: var(--ink); color: white; padding: 65px; }
+	.closing > p { max-width: 680px; margin: 0 0 50px; font-size: clamp(40px, 5.6vw, 68px); font-weight: 530; line-height: .99; letter-spacing: -.055em; }
+	.closing > div { display: flex; align-items: center; gap: 13px; margin-bottom: 35px; color: #93a0ab; font: 560 9px var(--mono); letter-spacing: .09em; }
+	.closing > div i { width: 50px; border-top: 1px dashed #4c5b68; }
+	.primary-cta.light { background: var(--wash); color: #0c2233; }
+	.primary-cta.light span { color: var(--blue-deep); }
+
+	footer { width: min(1180px, calc(100% - 40px)); min-height: 120px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; color: #79848e; font: 500 10px var(--mono); }
+	footer p { margin: 0; }
+	footer p:nth-child(2) { text-align: center; }
+	footer p:last-child { text-align: right; }
+	footer a { color: inherit; }
+	.footer-brand { font-family: var(--sans); font-size: 16px; }
+
+	@media (max-width: 980px) {
+		.hero { grid-template-columns: 1fr; margin-top: 45px; gap: 55px; }
+		.hero-copy { max-width: 680px; }
+		.product-frame { transform: none; }
+		.principles article div { grid-template-columns: 1fr; gap: 9px; }
+		.coverage { grid-template-columns: 1fr; gap: 30px; }
+	}
+	@media (max-width: 600px) {
+		.site-header, .hero, .principles, .coverage, .closing, footer { width: min(100% - 28px, 1180px); }
+		.site-header { height: 64px; }
+		.hero { margin: 44px auto 80px; }
+		.eyebrow { margin-bottom: 18px; }
+		h1 { font-size: clamp(40px, 13vw, 58px); }
+		.lede { margin-top: 24px; font-size: 15px; }
+		.hero-actions { align-items: flex-start; flex-direction: column; gap: 12px; }
+		.product-frame { border-radius: 6px; }
+		.app-pane { padding: 16px; }
+		.inputs { flex-wrap: wrap; }
+		.input { min-width: 44%; }
+		.reading { font-size: 32px; }
+		.principles article { grid-template-columns: 42px 1fr; padding: 26px 0; }
+		.principles h2 { font-size: 19px; }
+		.principles p { font-size: 13px; }
+		.coverage h2 { font-size: 25px; }
+		.coverage th, .coverage td { font-size: 12px; }
+		.closing { padding: 40px 25px; }
+		.closing > div { flex-wrap: wrap; }
+		.closing > div i { width: 20px; }
+		footer { grid-template-columns: 1fr auto; padding: 30px 0; gap: 8px 0; }
+		.footer-brand { display: none; }
+		footer p:nth-child(2) { text-align: left; }
+	}
+</style>
