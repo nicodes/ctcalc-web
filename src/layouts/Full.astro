@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'CT Calc — Contact time calculator for drinking water disinfection',
+	description =
+		'Work out the CT contact time needed to inactivate giardia and viruses with free chlorine, chloramine, chlorine dioxide or ozone. Reads the tables in EPA 815-R-99-013, for Surface Water Treatment Rule compliance.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, 'https://ctcalc.com');
+
+// Two entries rather than one. The SoftwareApplication is the app people are
+// being sent to; the FAQPage is the questions this page actually answers, and
+// they are the queries that bring anyone here — "what is CT", "how is contact
+// time calculated". Both describe what is on the page, which is the only kind
+// of structured data worth emitting.
+const structuredData = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'SoftwareApplication',
+		name: 'CT Calc',
+		url: 'https://ctcalc.com',
+		applicationCategory: 'UtilitiesApplication',
+		operatingSystem: 'Web, iOS, Android',
+		description,
+		offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: [
+			{
+				'@type': 'Question',
+				name: 'What is CT in water treatment?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text:
+						'CT is disinfectant concentration multiplied by contact time, in mg·min/L. The Surface Water Treatment Rule sets the CT a system must achieve for a given level of giardia or virus inactivation, and the required value depends on the disinfectant, the water temperature, and — for free chlorine against giardia — the pH and the disinfectant residual.',
+				},
+			},
+			{
+				'@type': 'Question',
+				name: 'How is the required contact time calculated?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text:
+						'It is read from the CT tables published in EPA 815-R-99-013, the Disinfection Profiling and Benchmarking Guidance Manual (August 1999). Those tables are sampled on a coarse grid, so conditions between grid points are interpolated: across temperature alone for most disinfectants, and across temperature, residual and pH together for free chlorine against giardia.',
+				},
+			},
+			{
+				'@type': 'Question',
+				name: 'Which disinfectants and pathogens does CT Calc cover?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text:
+						'Free chlorine, chloramine, chlorine dioxide and ozone, against giardia and viruses. Giardia is published from 0.5-log to 3-log inactivation in half-log steps; viruses at 2-log, 3-log and 4-log. Cryptosporidium is not covered.',
+				},
+			},
+			{
+				'@type': 'Question',
+				name: 'Does CT Calc work offline?',
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text:
+						'Yes. The EPA tables are bundled into the app and the calculation runs on the device, so it needs no network connection — which matters in a plant room with no signal.',
+				},
+			},
+		],
+	},
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#f1f5f9" />
+		<meta name="robots" content="index, follow" />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="CT Calc" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+	</head>
+	<body><slot /></body>
+</html>

@@ -1,1 +1,32 @@
-@import "tailwindcss";
+/* Fonts are the platform's own, not fetched. Reaching for the native UI sans
+   and native monospace of each platform means the site loads what the reader
+   already has, makes no third-party request, sends nobody's IP to a font CDN,
+   and needs no CSP exception to do it. */
+
+/* The accent is the app's own. #208AEF is the colour of CT Calc's splash screen
+   and #E6F4FE its adaptive icon background (app/app.json in the ctcalc repo),
+   so the site and the thing it is about are the same blue rather than the site
+   inventing a brand the product does not wear. --blue is that colour;
+   --blue-deep is the darkened form that clears contrast on paper, since the
+   splash blue is a background and too light to read small text in. */
+:root {
+	--ink: #101a24;
+	--quiet: #58646f;
+	--blue: #208aef;
+	--blue-deep: #0b5ea8;
+	--wash: #e6f4fe;
+	--paper: #f1f5f9;
+	--sans: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+	--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	font-family: var(--sans);
+	background: var(--paper);
+	color: var(--ink);
+	font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--paper); }
+body { min-width: 320px; min-height: 100svh; margin: 0; background: var(--paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+button, input, textarea, select { font: inherit; }
+::selection { background: var(--wash); color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
