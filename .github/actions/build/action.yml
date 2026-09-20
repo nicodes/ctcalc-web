@@ -4,15 +4,16 @@ description: >
   wait behind a build it was going to fail anyway.
 
   A composite action rather than a reusable workflow so it runs in the caller's
-  job, under the caller's name -- ci / Build -- rather than as a nested
-  "caller / callee" check.
+  job, under the caller's name -- Build / Build in the Build job, Test / Build
+  in the Test job -- rather than as a nested "caller / callee" check.
 
   Worth being honest about why this is a separate file: unlike the -be repos,
   where one definition is what stops the deploy-side copy being trimmed until it
-  no longer matches what people trust on a pull request, this action has exactly
-  ONE caller. There is no cd.yml here -- Vercel deploys this site -- so nothing
-  can drift from anything. It is split out so that every repo in the org has the
-  same shape, and for no stronger reason than that.
+  no longer matches what people trust on a pull request, this action's callers
+  are exactly ci.yml's Build and Test jobs. There is no cd.yml here -- Vercel
+  deploys this site -- so nothing can drift from anything. It is split out so
+  that every repo in the org has the same shape, and for no stronger reason
+  than that.
 
   It also shares nothing with the other -web repos. `uses: ./.github/actions/*`
   is repo-local, so their copies of this file are copies, not references.
