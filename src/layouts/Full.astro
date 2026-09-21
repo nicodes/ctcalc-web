@@ -8,8 +8,7 @@ interface Props {
 
 const {
 	title = 'CT Calc — Contact time calculator for drinking water disinfection',
-	description =
-		'Work out the CT contact time needed to inactivate giardia and viruses with free chlorine, chloramine, chlorine dioxide or ozone. Reads the tables in EPA 815-R-99-013, for Surface Water Treatment Rule compliance.',
+	description = 'Work out the CT contact time needed to inactivate giardia and viruses with free chlorine, chloramine, chlorine dioxide or ozone. Reads the tables in EPA 815-R-99-013, for Surface Water Treatment Rule compliance.',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, 'https://ctcalc.com');
@@ -39,8 +38,7 @@ const structuredData = [
 				name: 'What is CT in water treatment?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text:
-						'CT is disinfectant concentration multiplied by contact time, in mg·min/L. The Surface Water Treatment Rule sets the CT a system must achieve for a given level of giardia or virus inactivation, and the required value depends on the disinfectant, the water temperature, and — for free chlorine against giardia — the pH and the disinfectant residual.',
+					text: 'CT is disinfectant concentration multiplied by contact time, in mg·min/L. The Surface Water Treatment Rule sets the CT a system must achieve for a given level of giardia or virus inactivation, and the required value depends on the disinfectant, the water temperature, and — for free chlorine against giardia — the pH and the disinfectant residual.',
 				},
 			},
 			{
@@ -48,8 +46,7 @@ const structuredData = [
 				name: 'How is the required contact time calculated?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text:
-						'It is read from the CT tables published in EPA 815-R-99-013, the Disinfection Profiling and Benchmarking Guidance Manual (August 1999). Those tables are sampled on a coarse grid, so conditions between grid points are interpolated: across temperature alone for most disinfectants, and across temperature, residual and pH together for free chlorine against giardia.',
+					text: 'It is read from the CT tables published in EPA 815-R-99-013, the Disinfection Profiling and Benchmarking Guidance Manual (August 1999). Those tables are sampled on a coarse grid, so conditions between grid points are interpolated: across temperature alone for most disinfectants, and across temperature, residual and pH together for free chlorine against giardia.',
 				},
 			},
 			{
@@ -57,8 +54,7 @@ const structuredData = [
 				name: 'Which disinfectants and pathogens does CT Calc cover?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text:
-						'Free chlorine, chloramine, chlorine dioxide and ozone, against giardia and viruses. Giardia is published from 0.5-log to 3-log inactivation in half-log steps; viruses at 2-log, 3-log and 4-log. Cryptosporidium is not covered.',
+					text: 'Free chlorine, chloramine, chlorine dioxide and ozone, against giardia and viruses. Giardia is published from 0.5-log to 3-log inactivation in half-log steps; viruses at 2-log, 3-log and 4-log. Cryptosporidium is not covered.',
 				},
 			},
 			{
@@ -66,8 +62,7 @@ const structuredData = [
 				name: 'Does CT Calc work offline?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text:
-						'Yes. The EPA tables are bundled into the app and the calculation runs on the device, so it needs no network connection — which matters in a plant room with no signal.',
+					text: 'Yes. The EPA tables are bundled into the app and the calculation runs on the device, so it needs no network connection — which matters in a plant room with no signal.',
 				},
 			},
 		],
