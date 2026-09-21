@@ -1,11 +1,10 @@
 ---
-import Full from '../layouts/Full.astro';
 import octicons from '@primer/octicons';
+import Full from '../layouts/Full.astro';
 
 const appUrl = 'https://app.ctcalc.com';
 const repo = 'https://github.com/nicodes/ctcalc';
-const icon = (name: keyof typeof octicons, size = 16) =>
-	octicons[name].toSVG({ width: size, height: size });
+const icon = (name: keyof typeof octicons, size = 16) => octicons[name].toSVG({ width: size, height: size });
 
 // The reading shown in the frame is a real one. Free chlorine against giardia
 // at 5 °C, 1.0 mg/L, pH 7.0, for 2-log inactivation is 99 mg·min/L in the
