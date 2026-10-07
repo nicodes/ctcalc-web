@@ -45,7 +45,7 @@ If the app's formatting changes, these change with it.
 ## The palette is the app's
 
 `#208AEF` is CT Calc's splash colour and `#E6F4FE` its adaptive icon background,
-both straight out of `app/app.json` in the [ctcalc](https://github.com/nicodes/ctcalc)
+both straight out of `app/app.json` in the CT Calc product
 repo. The site wears what the product wears rather than inventing a brand
 alongside it. `--blue-deep` is the darkened form used for text, because the
 splash blue is a background colour and does not clear contrast at small sizes.
@@ -64,4 +64,4 @@ rather than left for someone to discover.
 
 ## Related
 
-- [ctcalc](https://github.com/nicodes/ctcalc) — the app itself
+- [Open CT Calc](https://app.ctcalc.com) — the calculator
