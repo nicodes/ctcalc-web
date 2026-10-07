@@ -3,7 +3,6 @@ import octicons from '@primer/octicons';
 import Full from '../layouts/Full.astro';
 
 const appUrl = 'https://app.ctcalc.com';
-const repo = 'https://github.com/nicodes/ctcalc';
 const icon = (name: keyof typeof octicons, size = 16) => octicons[name].toSVG({ width: size, height: size });
 
 // The reading shown in the frame is a real one. Free chlorine against giardia
@@ -41,7 +40,7 @@ const coverage = [
 			<a class="header-cta" href={appUrl}>Open app <span class="icon" set:html={icon('arrow-up-right', 14)} /></a>
 		</header>
 
-		<main>
+		<main id="main-content">
 			<section class="hero">
 				<div class="hero-copy">
 					<p class="eyebrow"><span></span> Surface Water Treatment Rule</p>
@@ -53,11 +52,11 @@ const coverage = [
 					</p>
 					<div class="hero-actions">
 						<a class="primary-cta" href={appUrl}>Open CT Calc <span class="icon" set:html={icon('arrow-right', 16)} /></a>
-						<p>Web · iOS and Android coming soon · works offline · free</p>
+						<p>Web · works offline · free</p>
 					</div>
 				</div>
 
-				<div class="product-frame" aria-label="CT Calc, calculating free chlorine against giardia">
+				<div class="demo-wrap"><p class="demo-caption">Illustrative calculator reading · open the app to use the controls.</p><div class="product-frame" aria-label="CT Calc, calculating free chlorine against giardia">
 					<div class="frame-bar">
 						<div class="frame-brand"><span class="menu-lines"></span> CT Calc</div>
 						<div class="frame-actions"><span class="icon" set:html={icon('info', 13)} /></div>
@@ -109,7 +108,7 @@ const coverage = [
 						</div>
 					</div>
 				</div>
-			</section>
+			</div></section>
 
 			<section class="principles" aria-label="How CT Calc works">
 				<article>
@@ -184,7 +183,7 @@ const coverage = [
 
 		<footer>
 			<a class="brand footer-brand" href="/"><span>CT Calc</span></a>
-			<p><a href={repo}>Open source</a> · EPA 815-R-99-013</p>
+			<p><a href={appUrl}>Open calculator</a> · EPA 815-R-99-013</p>
 			<p>© {new Date().getFullYear()} CT Calc</p>
 		</footer>
 	</div>
@@ -302,4 +301,38 @@ const coverage = [
 		.footer-brand { display: none; }
 		footer p:nth-child(2) { text-align: left; }
 	}
+
+
+/* A field reference, with squared rules and a blue calculation sheet. */
+.site-header { border-bottom: 2px solid #12334c; height: 88px; }
+.hero { grid-template-columns: 1fr 1fr; gap: 60px; margin: 64px auto 80px; align-items: start; }
+.eyebrow { color: #0b5ea8; letter-spacing: .14em; }
+.eyebrow span { border-radius: 0; box-shadow: none; }
+h1 { font-size: clamp(48px, 5vw, 72px); font-family: Georgia, serif; letter-spacing: -.045em; line-height: 1.08; }
+h1 em { font-style: normal; text-decoration: underline; text-decoration-color: #97c5e8; text-underline-offset: 8px; }
+.lede { font-size: 17px; }
+.hero-actions { align-items: flex-start; flex-direction: column; }
+.hero-actions p { color: #58646f; }
+.primary-cta { background: #0b5ea8; border-radius: 0; padding: 16px 22px; }
+.product-frame { border-radius: 0; transform: none; box-shadow: 12px 12px 0 #cfdfeb; border: 1px solid #bacbd8; }
+.product-frame::before { display: none; }
+.frame-bar { background: #12334c; color: #fff; }
+.result { border-top: 2px solid #0b5ea8; }
+.reading { font-family: var(--mono); }
+.principles { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-top: 2px solid #12334c; gap: 36px; margin-bottom: 80px; }
+.principles article { display: block; border-bottom: 0; }
+.principles article div { display: block; }
+.number { display: block; margin-bottom: 18px; color: #0b5ea8; }
+.principles h2 { font-family: Georgia,serif; margin-bottom: 15px; font-size: 25px; }
+.coverage { padding: 32px; background: #fff; border: 1px solid #bacbd8; }
+.coverage h2 { font-family: Georgia,serif; }
+.closing { border-radius: 0; background: #12334c; padding: 48px; }
+.closing > p { font-family: Georgia,serif; font-size: clamp(36px,4vw,54px); line-height: 1.1; }
+@media (max-width: 980px) { .hero { grid-template-columns: 1fr; } .product-frame { width: calc(100% - 12px); } .principles { grid-template-columns: 1fr; gap: 0; } .principles article { border-bottom: 1px solid #bacbd8; } }
+@media (max-width: 600px) { .site-header { height: 70px; } h1 { font-size: 45px; } .coverage { padding: 22px 16px; } .closing { padding: 36px 24px; } }
+
+.demo-caption { color: var(--quiet); font: 11px/1.6 var(--mono); margin: 0; }
+.demo-wrap { min-width: 0; } .demo-caption { margin-bottom: 12px; }
+
+footer, footer a { color: #59636a; }
 </style>
