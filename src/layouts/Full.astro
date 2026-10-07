@@ -8,7 +8,7 @@ interface Props {
 
 const {
 	title = 'CT Calc — Contact time calculator for drinking water disinfection',
-	description = 'Work out the CT contact time needed to inactivate giardia and viruses with free chlorine, chloramine, chlorine dioxide or ozone. Reads the tables in EPA 815-R-99-013, for Surface Water Treatment Rule compliance.',
+	description = 'Work out the CT contact time needed to inactivate giardia and viruses with free chlorine, chloramine, chlorine dioxide or ozone. Interpolates within the published tables in EPA 815-R-99-013, with explicit coverage limits.',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, 'https://ctcalc.com');
@@ -76,7 +76,7 @@ const structuredData = [
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
-		<meta name="theme-color" content="#f1f5f9" />
+		<meta name="theme-color" content="#f1f6f7" />
 		<meta name="robots" content="index, follow" />
 		<link rel="canonical" href={canonical} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
