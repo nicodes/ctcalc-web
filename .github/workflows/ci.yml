@@ -57,7 +57,7 @@ jobs:
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
 
       - name: "Validate workflow standards"
-        uses: nicodes/tools/workflow-standards@cf0e560c9bbb888488191fcce03409b6c6fbdc28 # v0.13.0
+        uses: nicodes/tools/workflow-standards@49797ebc03a4e57478073638c55479854715c86d # v0.27.0
 
       - name: Build
         uses: ./.github/actions/build
@@ -75,6 +75,19 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # .mise.toml again, so bun is the same version here as in Build.
+      - name: Record tested integration identity
+        if: github.event_name == 'pull_request'
+        uses: nicodes/tools/integration-identity@49797ebc03a4e57478073638c55479854715c86d # v0.27.0
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      - name: Upload artifacts
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fleet-integration-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .artifacts/fleet-integration.json
+          if-no-files-found: error
+          retention-days: 7
       - name: "Set up tools"
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
 
