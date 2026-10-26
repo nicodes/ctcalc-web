@@ -1,10 +1,10 @@
-<!-- Generated from private documentation source. Do not edit directly. Source SHA256: 468a634cf25df5a21ff9fb852a1d1a30dd4ecf5e4ebc9f6540c5cb36b8559faa -->
+<!-- Generated from private documentation source. Do not edit directly. Source SHA256: 838d28df97f8093a6397a157656b18748a564be3984b94d373f33bbbdc28fa45 -->
 
 # ctcalc-web
 
 Static website built with Astro.
 
-Install the [Komizo release](https://github.com/nicodes/komizo#install) matching `komizo.lock`, then run:
+Install the [komizo release](https://github.com/nicodes/komizo#install) matching `komizo.lock`, then run:
 
 ```sh
 komizo dev                 # Foreground development server
