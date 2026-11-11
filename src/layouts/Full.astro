@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import '../styles/global.css';
 
 interface Props {
@@ -91,6 +92,7 @@ const structuredData = [
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+		<Analytics />
 	</head>
 	<body><a class="skip-link" href="#main-content">Skip to content</a><slot /></body>
 </html>
